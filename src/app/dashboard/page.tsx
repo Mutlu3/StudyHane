@@ -6,39 +6,39 @@ export default function DashboardPage() {
   const { data: session } = useSession();
 
   return (
-    <div className="animate-fade-in">
-      <h1 style={{ fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', marginBottom: '8px' }}>Merhaba, {session?.user?.name} 👋</h1>
-      <p style={{ color: 'var(--text-muted)', marginBottom: '24px', fontSize: '0.9rem' }}>İşte bugünkü çalışma özetin.</p>
+    <div className="animate-fade-in" style={{ paddingBottom: '16px' }}>
+      <h1 style={{ fontSize: '1.5rem', marginBottom: '4px' }}>Merhaba, {session?.user?.name} 👋</h1>
+      <p style={{ color: 'var(--text-muted)', marginBottom: '16px', fontSize: '0.85rem' }}>İşte bugünkü çalışma özetin.</p>
 
       {/* Stats Grid */}
-      <div className="grid-3" style={{ marginBottom: '40px' }}>
-        <div className="glass-panel delay-100 animate-fade-in" style={{ padding: '24px' }}>
-          <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '8px', fontWeight: 600 }}>Bugün Çözülen Soru</div>
-          <div style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--primary)' }}>0</div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))', gap: '12px', marginBottom: '16px' }}>
+        <div className="glass-panel delay-100 animate-fade-in" style={{ padding: '16px 12px', textAlign: 'center' }}>
+          <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginBottom: '4px', fontWeight: 600 }}>Soru</div>
+          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--primary)', lineHeight: 1 }}>0</div>
         </div>
-        <div className="glass-panel delay-200 animate-fade-in" style={{ padding: '24px' }}>
-          <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '8px', fontWeight: 600 }}>Bugün Çalışma (Dk)</div>
-          <div style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--secondary)' }}>0</div>
+        <div className="glass-panel delay-200 animate-fade-in" style={{ padding: '16px 12px', textAlign: 'center' }}>
+          <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginBottom: '4px', fontWeight: 600 }}>Süre (Dk)</div>
+          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--secondary)', lineHeight: 1 }}>0</div>
         </div>
-        <div className="glass-panel delay-300 animate-fade-in" style={{ padding: '24px' }}>
-          <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '8px', fontWeight: 600 }}>Ateş Serisi 🔥</div>
-          <div style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--accent)' }}>0 Gün</div>
+        <div className="glass-panel delay-300 animate-fade-in" style={{ padding: '16px 12px', textAlign: 'center' }}>
+          <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginBottom: '4px', fontWeight: 600 }}>Seri 🔥</div>
+          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--accent)', lineHeight: 1 }}>0</div>
         </div>
       </div>
 
-      <div className="grid-2-1">
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '12px' }}>
         {/* Recent Activity */}
-        <div className="glass-panel delay-200 animate-fade-in" style={{ padding: '24px' }}>
-          <h2 style={{ fontSize: '1.2rem', marginBottom: '16px' }}>Son Çalışmaların</h2>
-          <div style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '40px 0' }}>
+        <div className="glass-panel delay-200 animate-fade-in" style={{ padding: '16px' }}>
+          <h2 style={{ fontSize: '1rem', marginBottom: '8px' }}>Son Çalışmaların</h2>
+          <div style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '16px 0', fontSize: '0.85rem' }}>
             Henüz hiç çalışma girmedin. Sol menüden 'Çalışma Gir' diyerek başlayabilirsin.
           </div>
         </div>
 
         {/* Mini Leaderboard / Group status */}
-        <div className="glass-panel delay-300 animate-fade-in" style={{ padding: '24px' }}>
-          <h2 style={{ fontSize: '1.2rem', marginBottom: '16px' }}>Grubum</h2>
-          <div style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '40px 0', fontSize: '0.9rem' }}>
+        <div className="glass-panel delay-300 animate-fade-in" style={{ padding: '16px' }}>
+          <h2 style={{ fontSize: '1rem', marginBottom: '8px' }}>Grubum</h2>
+          <div style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '16px 0', fontSize: '0.85rem' }}>
             Henüz bir gruba katılmadın. Rekabet etmek için bir grup kur veya katıl!
           </div>
         </div>
