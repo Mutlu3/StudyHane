@@ -41,6 +41,57 @@ export default function WrongBookPage() {
     }
   }
 
+  // Compress image to prevent Vercel Payload Too Large errors (413)
+  const compressImage = (file: File): Promise<File> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target?.result as string;
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          const MAX_WIDTH = 1000;
+          const MAX_HEIGHT = 1000;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          ctx?.drawImage(img, 0, 0, width, height);
+          canvas.toBlob(
+            (blob) => {
+              if (blob) {
+                const compressedFile = new File([blob], file.name, {
+                  type: "image/jpeg",
+                  lastModified: Date.now(),
+                });
+                resolve(compressedFile);
+              } else {
+                reject(new Error("Sıkıştırma başarısız."));
+              }
+            },
+            "image/jpeg",
+            0.7
+          );
+        };
+      };
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
   function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (file) {
@@ -59,13 +110,15 @@ export default function WrongBookPage() {
 
     setSubmitting(true);
 
-    const formData = new FormData();
-    formData.append("image", imageFile);
-    formData.append("courseName", courseName.trim());
-    if (topicName.trim()) formData.append("topicName", topicName.trim());
-    if (note.trim()) formData.append("note", note.trim());
-
     try {
+      const compressedImage = await compressImage(imageFile);
+
+      const formData = new FormData();
+      formData.append("image", compressedImage);
+      formData.append("courseName", courseName.trim());
+      if (topicName.trim()) formData.append("topicName", topicName.trim());
+      if (note.trim()) formData.append("note", note.trim());
+
       const res = await fetch("/api/wrong-answers", {
         method: "POST",
         body: formData,
@@ -83,9 +136,13 @@ export default function WrongBookPage() {
         // Reset file input
         const fileInput = document.getElementById("wrong-image-input") as HTMLInputElement;
         if (fileInput) fileInput.value = "";
+      } else {
+        const errorData = await res.json().catch(() => ({}));
+        alert("Hata: " + (errorData.error || "Sunucu yüklemeyi reddetti (Dosya çok büyük olabilir)."));
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error("Yükleme başarısız:", err);
+      alert("Bir hata oluştu: " + (err.message || "Bilinmeyen hata"));
     } finally {
       setSubmitting(false);
     }
