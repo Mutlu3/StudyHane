@@ -335,8 +335,8 @@ export default function WrongBookPage() {
 
       {/* Wrong Answers Grid */}
       {loading ? (
-        <div style={{ textAlign: "center", color: "var(--text-muted)", padding: "40px" }}>
-          Yükleniyor...
+        <div style={{ display: 'flex', justifyContent: 'center', padding: '40px' }}>
+          <div style={{ width: '40px', height: '40px', border: '3px solid var(--border)', borderTop: '3px solid var(--primary)', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
         </div>
       ) : wrongAnswers.length === 0 ? (
         <div

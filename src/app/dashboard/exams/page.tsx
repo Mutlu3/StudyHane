@@ -189,7 +189,11 @@ export default function MockExamsPage() {
     }
   };
 
-  if (loading) return <div>Yükleniyor...</div>;
+  if (loading) return (
+    <div style={{ display: 'flex', justifyContent: 'center', padding: '40px' }}>
+      <div style={{ width: '40px', height: '40px', border: '3px solid var(--border)', borderTop: '3px solid var(--primary)', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+    </div>
+  );
 
   return (
     <div className="animate-fade-in" style={{ maxWidth: '1000px', margin: '0 auto' }}>

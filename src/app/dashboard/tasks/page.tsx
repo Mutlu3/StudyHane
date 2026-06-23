@@ -104,7 +104,9 @@ export default function TasksPage() {
       </form>
 
       {loading ? (
-        <div style={{ textAlign: "center", padding: "40px", color: "var(--text-muted)" }}>Yükleniyor...</div>
+        <div style={{ display: 'flex', justifyContent: 'center', padding: '40px' }}>
+          <div style={{ width: '40px', height: '40px', border: '3px solid var(--border)', borderTop: '3px solid var(--primary)', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+        </div>
       ) : tasks.length === 0 ? (
         <div className="glass-panel" style={{ textAlign: "center", padding: "40px" }}>
           <p style={{ fontSize: "2.5rem", marginBottom: "16px" }}>📝</p>
