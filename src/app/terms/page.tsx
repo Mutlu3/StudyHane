@@ -5,7 +5,7 @@ export default function TermsPage() {
     {
       title: "1. Hizmet Tanımı",
       content:
-        "StudyHane (YKS Lig), öğrencilerin çalışma sürelerini takip etmelerini, çözdükleri soru sayılarını kaydetmelerini ve arkadaşlarıyla rekabet etmelerini sağlayan ücretsiz bir web uygulamasıdır. Hizmet, olduğu gibi sunulmakta olup sürekli erişilebilirlik garantisi verilmemektedir.",
+        "StudyHane, öğrencilerin çalışma sürelerini takip etmelerini, çözdükleri soru sayılarını kaydetmelerini ve arkadaşlarıyla rekabet etmelerini sağlayan ücretsiz bir web uygulamasıdır. Hizmet, olduğu gibi sunulmakta olup sürekli erişilebilirlik garantisi verilmemektedir.",
     },
     {
       title: "2. Kullanıcı Sorumlulukları",
@@ -40,7 +40,7 @@ export default function TermsPage() {
         <div className="container" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <Link href="/">
             <h2 style={{ fontSize: "1.5rem", fontWeight: 800 }}>
-              YKS <span className="gradient-text">Lig</span>
+              Study<span className="gradient-text">Hane</span>
             </h2>
           </Link>
           <Link href="/login" style={{ fontWeight: 600, padding: "8px 16px" }}>

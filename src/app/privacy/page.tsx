@@ -35,7 +35,7 @@ export default function PrivacyPage() {
         <div className="container" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <Link href="/">
             <h2 style={{ fontSize: "1.5rem", fontWeight: 800 }}>
-              YKS <span className="gradient-text">Lig</span>
+              Study<span className="gradient-text">Hane</span>
             </h2>
           </Link>
           <Link href="/login" style={{ fontWeight: 600, padding: "8px 16px" }}>
