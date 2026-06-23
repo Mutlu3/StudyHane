@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
-import { writeFile, mkdir } from "fs/promises";
-import path from "path";
+
+export const dynamic = "force-dynamic";
 
 export async function GET() {
   const session = await getServerSession(authOptions);
@@ -42,30 +42,31 @@ export async function POST(request: Request) {
     );
   }
 
-  // Ensure uploads directory exists
-  const uploadsDir = path.join(process.cwd(), "public/uploads");
-  await mkdir(uploadsDir, { recursive: true });
+  try {
+    // Convert image to Base64 data URI (Vercel has read-only filesystem)
+    const bytes = await image.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+    const base64 = buffer.toString("base64");
+    const mimeType = image.type || "image/png";
+    const imagePath = `data:${mimeType};base64,${base64}`;
 
-  // Generate unique filename
-  const ext = path.extname(image.name) || ".png";
-  const uniqueName = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}${ext}`;
-  const filePath = path.join(uploadsDir, uniqueName);
+    const wrongAnswer = await prisma.wrongAnswer.create({
+      data: {
+        userId,
+        imagePath,
+        courseName,
+        topicName,
+        note,
+      },
+    });
 
-  // Write file to disk
-  const bytes = await image.arrayBuffer();
-  await writeFile(filePath, Buffer.from(bytes));
-
-  const imagePath = `/uploads/${uniqueName}`;
-
-  const wrongAnswer = await prisma.wrongAnswer.create({
-    data: {
-      userId,
-      imagePath,
-      courseName,
-      topicName,
-      note,
-    },
-  });
-
-  return NextResponse.json(wrongAnswer);
+    return NextResponse.json(wrongAnswer);
+  } catch (error: any) {
+    console.error("Wrong answer upload error:", error);
+    return NextResponse.json(
+      { error: "Yükleme sırasında bir hata oluştu: " + (error?.message || "Bilinmeyen") },
+      { status: 500 }
+    );
+  }
 }
+
