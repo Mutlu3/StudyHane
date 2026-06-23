@@ -32,10 +32,10 @@ export default function MockExamsPage() {
   const [examName, setExamName] = useState("");
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [sections, setSections] = useState([
-    { sectionName: "Türkçe", correct: 0, wrong: 0, empty: 0 },
-    { sectionName: "Matematik", correct: 0, wrong: 0, empty: 0 },
-    { sectionName: "Fen Bilimleri", correct: 0, wrong: 0, empty: 0 },
-    { sectionName: "Sosyal Bilimler", correct: 0, wrong: 0, empty: 0 },
+    { sectionName: "Türkçe", correct: "", wrong: "", empty: "" },
+    { sectionName: "Matematik", correct: "", wrong: "", empty: "" },
+    { sectionName: "Fen Bilimleri", correct: "", wrong: "", empty: "" },
+    { sectionName: "Sosyal Bilimler", correct: "", wrong: "", empty: "" },
   ]);
 
   useEffect(() => {
@@ -79,7 +79,7 @@ export default function MockExamsPage() {
   };
 
   const handleAddSection = () => {
-    setSections([...sections, { sectionName: "", correct: 0, wrong: 0, empty: 0 }]);
+    setSections([...sections, { sectionName: "", correct: "", wrong: "", empty: "" }]);
   };
 
   const handleSectionChange = (index: number, field: string, value: string | number) => {
@@ -95,19 +95,25 @@ export default function MockExamsPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const parsed = sections.map(s => ({
+      sectionName: s.sectionName,
+      correct: parseInt(String(s.correct)) || 0,
+      wrong: parseInt(String(s.wrong)) || 0,
+      empty: parseInt(String(s.empty)) || 0,
+    }));
     try {
       const res = await fetch("/api/mock-exams", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ examName, date, sections }),
+        body: JSON.stringify({ examName, date, sections: parsed }),
       });
       if (res.ok) {
         setExamName("");
         setSections([
-          { sectionName: "Türkçe", correct: 0, wrong: 0, empty: 0 },
-          { sectionName: "Matematik", correct: 0, wrong: 0, empty: 0 },
-          { sectionName: "Fen Bilimleri", correct: 0, wrong: 0, empty: 0 },
-          { sectionName: "Sosyal Bilimler", correct: 0, wrong: 0, empty: 0 },
+          { sectionName: "Türkçe", correct: "", wrong: "", empty: "" },
+          { sectionName: "Matematik", correct: "", wrong: "", empty: "" },
+          { sectionName: "Fen Bilimleri", correct: "", wrong: "", empty: "" },
+          { sectionName: "Sosyal Bilimler", correct: "", wrong: "", empty: "" },
         ]);
         fetchExams();
       } else {
@@ -221,45 +227,58 @@ export default function MockExamsPage() {
         <div style={{ marginBottom: '24px' }}>
           <label style={{ display: 'block', marginBottom: '12px', fontSize: '0.9rem', color: 'var(--text-muted)' }}>Bölümler ve Netler</label>
           {sections.map((section, idx) => (
-            <div key={idx} style={{ display: 'flex', gap: '12px', marginBottom: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
-              <input 
-                type="text" 
-                required
-                value={section.sectionName}
-                onChange={e => handleSectionChange(idx, 'sectionName', e.target.value)}
-                placeholder="Ders/Bölüm Adı"
-                style={{ flex: 2, minWidth: '150px', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', background: 'var(--bg-primary)', color: 'var(--text-main)' }}
-              />
-              <input 
-                type="number" 
-                required
-                min="0"
-                value={section.correct}
-                onChange={e => handleSectionChange(idx, 'correct', e.target.value)}
-                placeholder="Doğru"
-                style={{ flex: 1, minWidth: '80px', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', background: 'var(--bg-primary)', color: 'var(--text-main)' }}
-              />
-              <input 
-                type="number" 
-                required
-                min="0"
-                value={section.wrong}
-                onChange={e => handleSectionChange(idx, 'wrong', e.target.value)}
-                placeholder="Yanlış"
-                style={{ flex: 1, minWidth: '80px', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', background: 'var(--bg-primary)', color: 'var(--text-main)' }}
-              />
-              <input 
-                type="number" 
-                required
-                min="0"
-                value={section.empty}
-                onChange={e => handleSectionChange(idx, 'empty', e.target.value)}
-                placeholder="Boş"
-                style={{ flex: 1, minWidth: '80px', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', background: 'var(--bg-primary)', color: 'var(--text-main)' }}
-              />
-              <button type="button" onClick={() => handleRemoveSection(idx)} style={{ color: 'var(--accent)', background: 'none', border: 'none', cursor: 'pointer', padding: '10px' }}>
-                X
-              </button>
+            <div key={idx} style={{ background: 'var(--bg-primary)', borderRadius: 'var(--radius-sm)', padding: '12px', marginBottom: '12px' }}>
+              <div style={{ marginBottom: '8px' }}>
+                <input 
+                  type="text" 
+                  required
+                  value={section.sectionName}
+                  onChange={e => handleSectionChange(idx, 'sectionName', e.target.value)}
+                  placeholder="Ders/Bölüm Adı"
+                  style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', background: 'var(--surface-solid)', color: 'var(--text-main)', fontWeight: 600 }}
+                />
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr auto', gap: '8px', alignItems: 'end' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '4px', fontWeight: 600 }}>Doğru</label>
+                  <input 
+                    type="number" 
+                    required
+                    min="0"
+                    value={section.correct}
+                    onChange={e => handleSectionChange(idx, 'correct', e.target.value)}
+                    placeholder="0"
+                    style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', background: 'var(--surface-solid)', color: 'var(--text-main)', textAlign: 'center' }}
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '4px', fontWeight: 600 }}>Yanlış</label>
+                  <input 
+                    type="number" 
+                    required
+                    min="0"
+                    value={section.wrong}
+                    onChange={e => handleSectionChange(idx, 'wrong', e.target.value)}
+                    placeholder="0"
+                    style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', background: 'var(--surface-solid)', color: 'var(--text-main)', textAlign: 'center' }}
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '4px', fontWeight: 600 }}>Boş</label>
+                  <input 
+                    type="number" 
+                    required
+                    min="0"
+                    value={section.empty}
+                    onChange={e => handleSectionChange(idx, 'empty', e.target.value)}
+                    placeholder="0"
+                    style={{ width: '100%', padding: '10px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', background: 'var(--surface-solid)', color: 'var(--text-main)', textAlign: 'center' }}
+                  />
+                </div>
+                <button type="button" onClick={() => handleRemoveSection(idx)} style={{ color: 'var(--accent)', background: 'none', border: 'none', cursor: 'pointer', padding: '10px', fontSize: '1.1rem' }}>
+                  ✕
+                </button>
+              </div>
             </div>
           ))}
           <button type="button" onClick={handleAddSection} className="btn btn-outline" style={{ padding: '8px 16px', fontSize: '0.85rem', marginTop: '8px' }}>

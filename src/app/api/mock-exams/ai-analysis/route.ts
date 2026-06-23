@@ -4,10 +4,12 @@ import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { GoogleGenAI } from "@google/genai";
 
+export const dynamic = "force-dynamic";
+
 export async function POST() {
   const session = await getServerSession(authOptions);
   if (!session?.user) {
-    return new NextResponse("Unauthorized", { status: 401 });
+    return NextResponse.json({ analysis: "Analiz için giriş yapmanız gerekiyor." }, { status: 401 });
   }
 
   const userId = (session.user as any).id;
@@ -60,8 +62,11 @@ ${promptData}
     });
 
     return NextResponse.json({ analysis: response.text });
-  } catch (error) {
+  } catch (error: any) {
     console.error("AI Analysis Error:", error);
-    return new NextResponse("Internal Error", { status: 500 });
+    return NextResponse.json({ 
+      analysis: "Yapay zeka şu an meşgul, lütfen birkaç saniye sonra tekrar deneyin. (Hata: " + (error?.message || "Bilinmeyen") + ")" 
+    });
   }
 }
+

@@ -7,8 +7,8 @@ export default function DashboardPage() {
 
   return (
     <div className="animate-fade-in">
-      <h1 style={{ fontSize: '2.5rem', marginBottom: '8px' }}>Merhaba, {session?.user?.name} 👋</h1>
-      <p style={{ color: 'var(--text-muted)', marginBottom: '32px' }}>İşte bugünkü çalışma özetin.</p>
+      <h1 style={{ fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', marginBottom: '8px' }}>Merhaba, {session?.user?.name} 👋</h1>
+      <p style={{ color: 'var(--text-muted)', marginBottom: '24px', fontSize: '0.9rem' }}>İşte bugünkü çalışma özetin.</p>
 
       {/* Stats Grid */}
       <div className="grid-3" style={{ marginBottom: '40px' }}>
