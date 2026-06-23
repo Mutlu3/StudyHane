@@ -225,9 +225,9 @@ export default function WrongBookPage() {
                 id="wrong-image-camera"
                 type="file"
                 accept="image/*"
-                capture="environment"
+                capture="camera"
                 onChange={handleImageChange}
-                style={{ display: "none" }}
+                style={{ position: "absolute", width: "1px", height: "1px", opacity: 0, overflow: "hidden", zIndex: -1 }}
               />
 
               <label
@@ -255,7 +255,7 @@ export default function WrongBookPage() {
                 type="file"
                 accept="image/*"
                 onChange={handleImageChange}
-                style={{ display: "none" }}
+                style={{ position: "absolute", width: "1px", height: "1px", opacity: 0, overflow: "hidden", zIndex: -1 }}
               />
             </div>
 
