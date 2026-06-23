@@ -1,6 +1,34 @@
+"use client";
+
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Home() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.replace("/dashboard");
+    }
+  }, [status, router]);
+
+  // Show nothing while checking session
+  if (status === "loading" || status === "authenticated") {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ 
+          width: '40px', height: '40px', border: '3px solid var(--border)', 
+          borderTop: '3px solid var(--primary)', borderRadius: '50%', 
+          animation: 'spin 0.8s linear infinite' 
+        }} />
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
+  }
+
   return (
     <main>
       {/* Navbar */}
