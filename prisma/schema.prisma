@@ -56,6 +56,7 @@ model User {
   wrongAnswers  WrongAnswer[]
   mockExams     MockExam[]
   pomodoros     PomodoroSession[]
+  tasks         Task[]
 }
 
 model VerificationToken {
@@ -152,4 +153,16 @@ model PomodoroSession {
   endTime   DateTime?
   duration  Int      // in minutes
   completed Boolean  @default(false)
+}
+
+// ==========================================
+// To-Do List (Görevler)
+// ==========================================
+model Task {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  isCompleted Boolean  @default(false)
+  createdAt   DateTime @default(now())
 }
