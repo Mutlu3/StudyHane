@@ -164,3 +164,38 @@ a:hover {
 .delay-100 { animation-delay: 100ms; }
 .delay-200 { animation-delay: 200ms; }
 .delay-300 { animation-delay: 300ms; }
+
+/* Responsive Utility Classes */
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+.grid-2-1 { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
+
+@media (max-width: 992px) {
+  .grid-3 { grid-template-columns: repeat(2, 1fr); }
+  .grid-2-1 { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+  .grid-3, .grid-2 { grid-template-columns: 1fr; }
+  
+  .container { padding: 0 16px; }
+  
+  h1 { font-size: 2.5rem !important; }
+  h2 { font-size: 1.5rem !important; }
+  
+  /* Mobile padding adjustments */
+  .mobile-p-4 { padding: 16px !important; }
+  .mobile-pt-24 { padding-top: 96px !important; }
+  
+  /* Hide on mobile utility */
+  .hidden-mobile { display: none !important; }
+  
+  /* Mobile Sidebar Overlays */
+  .mobile-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 40;
+    backdrop-filter: blur(4px);
+  }
+}

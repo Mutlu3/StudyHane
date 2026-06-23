@@ -11,7 +11,7 @@ export default function DashboardPage() {
       <p style={{ color: 'var(--text-muted)', marginBottom: '32px' }}>İşte bugünkü çalışma özetin.</p>
 
       {/* Stats Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px', marginBottom: '40px' }}>
+      <div className="grid-3" style={{ marginBottom: '40px' }}>
         <div className="glass-panel delay-100 animate-fade-in" style={{ padding: '24px' }}>
           <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '8px', fontWeight: 600 }}>Bugün Çözülen Soru</div>
           <div style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--primary)' }}>0</div>
@@ -26,7 +26,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px' }}>
+      <div className="grid-2-1">
         {/* Recent Activity */}
         <div className="glass-panel delay-200 animate-fade-in" style={{ padding: '24px' }}>
           <h2 style={{ fontSize: '1.2rem', marginBottom: '16px' }}>Son Çalışmaların</h2>

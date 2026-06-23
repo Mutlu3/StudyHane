@@ -34,8 +34,8 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="glass-panel delay-200 animate-fade-in" style={{ marginTop: '80px', padding: '40px', maxWidth: '900px', margin: '80px auto 0' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
+          <div className="glass-panel delay-200 animate-fade-in mobile-p-4" style={{ marginTop: '80px', padding: '40px', maxWidth: '900px', margin: '80px auto 0' }}>
+            <div className="grid-3">
               <div>
                 <h3 style={{ fontSize: '2rem', marginBottom: '8px' }}>🚀</h3>
                 <h4 style={{ fontSize: '1.2rem', marginBottom: '8px' }}>Rekabet Et</h4>
@@ -58,7 +58,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer style={{ padding: '24px 0', borderTop: '1px solid var(--border)', textAlign: 'center' }}>
-        <div className="container" style={{ display: 'flex', justifyContent: 'center', gap: '24px', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+        <div className="container" style={{ display: 'flex', justifyContent: 'center', gap: '24px', flexWrap: 'wrap', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
           <Link href="/privacy" style={{ color: 'var(--text-muted)' }}>Gizlilik Politikası</Link>
           <Link href="/terms" style={{ color: 'var(--text-muted)' }}>Kullanım Şartları</Link>
           <span>© 2026 StudyHane</span>

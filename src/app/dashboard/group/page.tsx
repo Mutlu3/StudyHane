@@ -54,8 +54,8 @@ export default function GroupPage() {
 
   if (!data) {
     return (
-      <div className="animate-fade-in" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '40px' }}>
-        <div className="glass-panel" style={{ padding: '40px' }}>
+      <div className="animate-fade-in grid-2" style={{ gap: '40px' }}>
+        <div className="glass-panel" style={{ padding: '32px' }}>
           <h2 style={{ fontSize: '1.5rem', marginBottom: '16px' }}>Yeni Grup Kur</h2>
           <p style={{ color: 'var(--text-muted)', marginBottom: '24px' }}>Kendi çalışma ligini başlat ve arkadaşlarını davet et.</p>
           <form onSubmit={createGroup} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
