@@ -5,10 +5,51 @@ import { useRouter } from "next/navigation";
 
 export default function PomodoroPage() {
   const [workMinutes, setWorkMinutes] = useState(25);
+  const [breakMinutes, setBreakMinutes] = useState(5);
   const [timeLeft, setTimeLeft] = useState(25 * 60);
   const [isActive, setIsActive] = useState(false);
   const [isBreak, setIsBreak] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    // Ayarlardan okuma
+    const savedWork = localStorage.getItem("pomodoro_work");
+    const savedBreak = localStorage.getItem("pomodoro_break");
+    const w = savedWork ? parseInt(savedWork) : 25;
+    const b = savedBreak ? parseInt(savedBreak) : 5;
+    setWorkMinutes(w);
+    setBreakMinutes(b);
+    if (!isActive) {
+      setTimeLeft(isBreak ? b * 60 : w * 60);
+    }
+  }, [isActive, isBreak]);
+
+  const playAlarmSound = () => {
+    try {
+      const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+      if (!AudioContextClass) return;
+      const ctx = new AudioContextClass();
+      let startTime = ctx.currentTime;
+      for (let i = 0; i < 4; i++) { // 4 beeps
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(880, startTime);
+        gain.gain.setValueAtTime(0.1, startTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.3);
+        osc.start(startTime);
+        osc.stop(startTime + 0.3);
+        startTime += 0.5;
+      }
+    } catch (e) {
+      console.log("Ses çalınamadı", e);
+    }
+    if ("vibrate" in navigator) {
+      navigator.vibrate([500, 250, 500, 250, 500]);
+    }
+  };
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -17,23 +58,34 @@ export default function PomodoroPage() {
         setTimeLeft((prevTime) => prevTime - 1);
       }, 1000);
     } else if (timeLeft === 0 && isActive) {
+      playAlarmSound();
       if (!isBreak) {
-        // Pomodoro finished, log it
         logPomodoro(workMinutes);
         setIsBreak(true);
-        setTimeLeft(5 * 60); // 5 min break
+        setTimeLeft(breakMinutes * 60);
         setIsActive(false);
-        alert(`Tebrikler! ${workMinutes} Dakikalık çalışma süren hesabına eklendi. Şimdi 5 dakika mola!`);
+        if ("Notification" in window && Notification.permission === "granted") {
+          new Notification("Tebrikler!", { body: `${workMinutes} dakikalık çalışma bitti. Mola zamanı!` });
+        }
+        alert(`Tebrikler! ${workMinutes} Dakikalık çalışma süren hesabına eklendi. Şimdi ${breakMinutes} dakika mola!`);
       } else {
-        // Break finished
         setIsBreak(false);
         setTimeLeft(workMinutes * 60);
         setIsActive(false);
+        if ("Notification" in window && Notification.permission === "granted") {
+          new Notification("Mola Bitti!", { body: "Yeni bir odaklanma seansına hazır mısın?" });
+        }
         alert("Mola bitti! Yeni bir seansa başlamaya hazır mısın?");
       }
     }
     return () => clearInterval(interval);
-  }, [isActive, timeLeft, isBreak, workMinutes]);
+  }, [isActive, timeLeft, isBreak, workMinutes, breakMinutes]);
+
+  useEffect(() => {
+    if ("Notification" in window && Notification.permission === "default") {
+      Notification.requestPermission();
+    }
+  }, []);
 
   const logPomodoro = async (minutes: number) => {
     await fetch('/api/log', {
@@ -48,15 +100,7 @@ export default function PomodoroPage() {
   
   const resetTimer = () => {
     setIsActive(false);
-    setTimeLeft(isBreak ? 5 * 60 : workMinutes * 60);
-  };
-
-  const handleDurationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const mins = parseInt(e.target.value);
-    setWorkMinutes(mins);
-    if (!isActive && !isBreak) {
-      setTimeLeft(mins * 60);
-    }
+    setTimeLeft(isBreak ? breakMinutes * 60 : workMinutes * 60);
   };
 
   const formatTime = (seconds: number) => {
@@ -73,29 +117,9 @@ export default function PomodoroPage() {
       </p>
 
       {!isActive && !isBreak && (
-        <div style={{ marginBottom: '32px' }}>
-          <label style={{ marginRight: '12px', fontWeight: 600, color: 'var(--text-muted)' }}>Çalışma Süresi:</label>
-          <select 
-            value={workMinutes} 
-            onChange={handleDurationChange}
-            style={{
-              padding: '8px 16px',
-              borderRadius: 'var(--radius-sm)',
-              border: '1px solid var(--border)',
-              background: 'var(--bg-primary)',
-              color: 'var(--text-main)',
-              fontSize: '1rem',
-              cursor: 'pointer'
-            }}
-          >
-            <option value={25}>25 Dakika</option>
-            <option value={30}>30 Dakika</option>
-            <option value={40}>40 Dakika</option>
-            <option value={45}>45 Dakika</option>
-            <option value={50}>50 Dakika</option>
-            <option value={60}>60 Dakika</option>
-          </select>
-        </div>
+        <p style={{ marginTop: '-10px', marginBottom: '32px', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+          Süreleri ⚙️ Ayarlar menüsünden değiştirebilirsiniz.
+        </p>
       )}
 
       <div className="glass-panel pomodoro-circle" style={{ display: 'inline-block', padding: '60px 80px', borderRadius: '50%', border: `4px solid ${isBreak ? 'var(--secondary)' : 'var(--primary)'}` }}>
@@ -106,7 +130,7 @@ export default function PomodoroPage() {
 
       <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', marginTop: '24px', flexWrap: 'wrap' }}>
         <button onClick={toggleTimer} className={`btn ${isActive ? 'btn-outline' : 'btn-primary'}`} style={{ minWidth: '140px' }}>
-          {isActive ? 'Duraklat' : (timeLeft < (isBreak ? 5 : workMinutes) * 60 ? 'Devam Et' : 'Başlat')}
+          {isActive ? 'Duraklat' : (timeLeft < (isBreak ? breakMinutes : workMinutes) * 60 ? 'Devam Et' : 'Başlat')}
         </button>
         <button onClick={resetTimer} className="btn btn-outline" style={{ minWidth: '140px' }}>
           Sıfırla

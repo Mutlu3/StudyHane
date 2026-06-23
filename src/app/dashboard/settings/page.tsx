@@ -7,14 +7,31 @@ import { useState, useEffect } from "react";
 export default function SettingsPage() {
   const { data: session } = useSession();
   const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [pomodoroWork, setPomodoroWork] = useState("25");
+  const [pomodoroBreak, setPomodoroBreak] = useState("5");
 
   useEffect(() => {
-    const saved = localStorage.getItem("theme") as "light" | "dark" | null;
-    if (saved) {
-      setTheme(saved);
-      document.documentElement.setAttribute("data-theme", saved);
+    const savedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
+    if (savedTheme) {
+      setTheme(savedTheme);
+      document.documentElement.setAttribute("data-theme", savedTheme);
     }
+    
+    const savedWork = localStorage.getItem("pomodoro_work");
+    const savedBreak = localStorage.getItem("pomodoro_break");
+    if (savedWork) setPomodoroWork(savedWork);
+    if (savedBreak) setPomodoroBreak(savedBreak);
   }, []);
+
+  const savePomodoroWork = (val: string) => {
+    setPomodoroWork(val);
+    localStorage.setItem("pomodoro_work", val);
+  };
+
+  const savePomodoroBreak = (val: string) => {
+    setPomodoroBreak(val);
+    localStorage.setItem("pomodoro_break", val);
+  };
 
   const toggleTheme = () => {
     const next = theme === "light" ? "dark" : "light";
@@ -90,6 +107,54 @@ export default function SettingsPage() {
               {theme === "dark" ? "🌙" : "☀️"}
             </span>
           </button>
+        </div>
+      </div>
+
+      {/* Pomodoro Section */}
+      <div
+        className="glass-panel"
+        style={{ padding: "32px", marginBottom: "24px" }}
+      >
+        <h2 style={{ fontSize: "1.2rem", marginBottom: "20px" }}>
+          ⏱️ Pomodoro
+        </h2>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div>
+              <div style={{ fontWeight: 600, marginBottom: "4px" }}>Odaklanma Süresi</div>
+              <div style={{ color: "var(--text-muted)", fontSize: "0.9rem" }}>Ana çalışma seansı</div>
+            </div>
+            <select
+              value={pomodoroWork}
+              onChange={(e) => savePomodoroWork(e.target.value)}
+              style={{ padding: "8px", borderRadius: "var(--radius-sm)", background: "var(--bg-primary)", color: "var(--text-main)", border: "1px solid var(--border)" }}
+            >
+              <option value="25">25 Dk</option>
+              <option value="30">30 Dk</option>
+              <option value="40">40 Dk</option>
+              <option value="45">45 Dk</option>
+              <option value="50">50 Dk</option>
+              <option value="60">60 Dk</option>
+            </select>
+          </div>
+
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div>
+              <div style={{ fontWeight: 600, marginBottom: "4px" }}>Mola Süresi</div>
+              <div style={{ color: "var(--text-muted)", fontSize: "0.9rem" }}>Seanslar arası dinlenme</div>
+            </div>
+            <select
+              value={pomodoroBreak}
+              onChange={(e) => savePomodoroBreak(e.target.value)}
+              style={{ padding: "8px", borderRadius: "var(--radius-sm)", background: "var(--bg-primary)", color: "var(--text-main)", border: "1px solid var(--border)" }}
+            >
+              <option value="5">5 Dk</option>
+              <option value="10">10 Dk</option>
+              <option value="15">15 Dk</option>
+              <option value="20">20 Dk</option>
+            </select>
+          </div>
         </div>
       </div>
 
