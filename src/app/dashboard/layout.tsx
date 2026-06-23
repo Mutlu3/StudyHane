@@ -23,7 +23,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }, [pathname]);
 
   if (status === "loading") {
-    return <div style={{ padding: '40px', textAlign: 'center' }}>Yükleniyor...</div>;
+    return (
+      <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-gradient)', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ 
+            width: '40px', height: '40px', border: '3px solid var(--border)', 
+            borderTop: '3px solid var(--primary)', borderRadius: '50%', 
+            animation: 'spin 0.8s linear infinite', margin: '0 auto 16px' 
+          }} />
+          <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+        </div>
+      </div>
+    );
   }
 
   if (!session) return null;
