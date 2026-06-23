@@ -1,0 +1,155 @@
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?
+  access_token       String?
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  
+  // StudyHane Custom Fields
+  groupId       String?
+  group         Group?    @relation(fields: [groupId], references: [id], onDelete: SetNull)
+  streak        Int       @default(0)
+  lastStudyDate DateTime?
+  
+  accounts      Account[]
+  sessions      Session[]
+  studyLogs     StudyLog[]
+  courses       Course[]
+  wrongAnswers  WrongAnswer[]
+  mockExams     MockExam[]
+  pomodoros     PomodoroSession[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Group {
+  id          String   @id @default(cuid())
+  name        String
+  inviteCode  String   @unique
+  users       User[]
+  createdAt   DateTime @default(now())
+}
+
+model StudyLog {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date      DateTime @default(now())
+  minutes   Int      @default(0)
+  questions Int      @default(0)
+  note      String?
+}
+
+// ==========================================
+// Konu Takibi v2 - Öğrenci kendi ekler
+// ==========================================
+model Course {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  createdAt DateTime @default(now())
+  topics    Topic[]
+}
+
+model Topic {
+  id          String    @id @default(cuid())
+  courseId     String
+  course      Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  name        String
+  isCompleted Boolean   @default(false)
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+}
+
+// ==========================================
+// Yanlış Defteri
+// ==========================================
+model WrongAnswer {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  imagePath  String   // public/uploads/ altında saklanacak
+  courseName String   // Ders adı (serbest metin)
+  topicName  String?  // Konu adı (isteğe bağlı)
+  note       String?  // Öğrenci notu
+  createdAt  DateTime @default(now())
+}
+
+// ==========================================
+// Deneme Analizi
+// ==========================================
+model MockExam {
+  id        String            @id @default(cuid())
+  userId    String
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  examName  String            // "TYT Deneme 3", "AYT Deneme 1" vb.
+  date      DateTime          @default(now())
+  createdAt DateTime          @default(now())
+  sections  MockExamSection[]
+}
+
+model MockExamSection {
+  id          String   @id @default(cuid())
+  mockExamId  String
+  mockExam    MockExam @relation(fields: [mockExamId], references: [id], onDelete: Cascade)
+  sectionName String   // "Matematik", "Türkçe", "Fen" vb.
+  correct     Int      @default(0)
+  wrong       Int      @default(0)
+  empty       Int      @default(0)
+  net         Float    @default(0) // Doğru - (Yanlış/4)
+}
+
+model PomodoroSession {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  startTime DateTime @default(now())
+  endTime   DateTime?
+  duration  Int      // in minutes
+  completed Boolean  @default(false)
+}

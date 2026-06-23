@@ -1,0 +1,407 @@
+"use client";
+
+import { useState, useEffect } from "react";
+
+interface WrongAnswer {
+  id: string;
+  imagePath: string;
+  courseName: string;
+  topicName?: string;
+  note?: string;
+  createdAt: string;
+}
+
+export default function WrongBookPage() {
+  const [wrongAnswers, setWrongAnswers] = useState<WrongAnswer[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+
+  // Form state
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [courseName, setCourseName] = useState("");
+  const [topicName, setTopicName] = useState("");
+  const [note, setNote] = useState("");
+
+  useEffect(() => {
+    fetchWrongAnswers();
+  }, []);
+
+  async function fetchWrongAnswers() {
+    try {
+      const res = await fetch("/api/wrong-answers");
+      if (res.ok) {
+        const data = await res.json();
+        setWrongAnswers(data);
+      }
+    } catch (err) {
+      console.error("Yanlışlar yüklenemedi:", err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!imageFile || !courseName.trim()) return;
+
+    setSubmitting(true);
+
+    const formData = new FormData();
+    formData.append("image", imageFile);
+    formData.append("courseName", courseName.trim());
+    if (topicName.trim()) formData.append("topicName", topicName.trim());
+    if (note.trim()) formData.append("note", note.trim());
+
+    try {
+      const res = await fetch("/api/wrong-answers", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (res.ok) {
+        const newAnswer = await res.json();
+        setWrongAnswers((prev) => [newAnswer, ...prev]);
+        // Reset form
+        setImageFile(null);
+        setImagePreview(null);
+        setCourseName("");
+        setTopicName("");
+        setNote("");
+        // Reset file input
+        const fileInput = document.getElementById("wrong-image-input") as HTMLInputElement;
+        if (fileInput) fileInput.value = "";
+      }
+    } catch (err) {
+      console.error("Yükleme başarısız:", err);
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  async function handleDelete(id: string) {
+    if (!confirm("Bu yanlışı silmek istediğine emin misin?")) return;
+
+    try {
+      const res = await fetch(`/api/wrong-answers/${id}`, {
+        method: "DELETE",
+      });
+
+      if (res.ok) {
+        setWrongAnswers((prev) => prev.filter((w) => w.id !== id));
+      }
+    } catch (err) {
+      console.error("Silme başarısız:", err);
+    }
+  }
+
+  function formatDate(dateStr: string) {
+    return new Date(dateStr).toLocaleDateString("tr-TR", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  }
+
+  return (
+    <div className="animate-fade-in" style={{ maxWidth: "900px", margin: "0 auto" }}>
+      <h1 style={{ fontSize: "2.5rem", marginBottom: "8px" }}>📕 Yanlış Defteri</h1>
+      <p style={{ color: "var(--text-muted)", marginBottom: "32px" }}>
+        Yanlış yaptığın soruların ekran görüntülerini yükle, notlar ekle ve tekrar çalış.
+      </p>
+
+      {/* Upload Form */}
+      <div className="glass-panel" style={{ padding: "24px", marginBottom: "32px" }}>
+        <h2 style={{ fontSize: "1.3rem", marginBottom: "20px", color: "var(--primary)" }}>
+          Yeni Yanlış Ekle
+        </h2>
+
+        <form onSubmit={handleSubmit}>
+          {/* Image Upload */}
+          <div style={{ marginBottom: "16px" }}>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "8px",
+                fontWeight: 600,
+                color: "var(--text-main)",
+              }}
+            >
+              Soru Görseli *
+            </label>
+            <input
+              id="wrong-image-input"
+              type="file"
+              accept="image/*"
+              capture="environment"
+              onChange={handleImageChange}
+              style={{
+                width: "100%",
+                padding: "10px",
+                background: "var(--bg-primary)",
+                border: "1px solid var(--border)",
+                borderRadius: "var(--radius-sm)",
+                color: "var(--text-main)",
+              }}
+            />
+            {imagePreview && (
+              <div style={{ marginTop: "12px" }}>
+                <img
+                  src={imagePreview}
+                  alt="Önizleme"
+                  style={{
+                    maxWidth: "100%",
+                    maxHeight: "240px",
+                    borderRadius: "var(--radius-sm)",
+                    border: "1px solid var(--border)",
+                    objectFit: "contain",
+                  }}
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Course & Topic Row */}
+          <div style={{ display: "flex", gap: "16px", marginBottom: "16px", flexWrap: "wrap" }}>
+            <div style={{ flex: "1 1 200px" }}>
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: "8px",
+                  fontWeight: 600,
+                  color: "var(--text-main)",
+                }}
+              >
+                Ders *
+              </label>
+              <input
+                type="text"
+                value={courseName}
+                onChange={(e) => setCourseName(e.target.value)}
+                placeholder="örn. Matematik"
+                required
+                style={{
+                  width: "100%",
+                  padding: "10px 14px",
+                  background: "var(--bg-primary)",
+                  border: "1px solid var(--border)",
+                  borderRadius: "var(--radius-sm)",
+                  color: "var(--text-main)",
+                  fontSize: "1rem",
+                }}
+              />
+            </div>
+
+            <div style={{ flex: "1 1 200px" }}>
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: "8px",
+                  fontWeight: 600,
+                  color: "var(--text-main)",
+                }}
+              >
+                Konu
+              </label>
+              <input
+                type="text"
+                value={topicName}
+                onChange={(e) => setTopicName(e.target.value)}
+                placeholder="örn. Türev"
+                style={{
+                  width: "100%",
+                  padding: "10px 14px",
+                  background: "var(--bg-primary)",
+                  border: "1px solid var(--border)",
+                  borderRadius: "var(--radius-sm)",
+                  color: "var(--text-main)",
+                  fontSize: "1rem",
+                }}
+              />
+            </div>
+          </div>
+
+          {/* Note */}
+          <div style={{ marginBottom: "20px" }}>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "8px",
+                fontWeight: 600,
+                color: "var(--text-main)",
+              }}
+            >
+              Not
+            </label>
+            <textarea
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              placeholder="Bu soruyu neden yanlış yaptın? Dikkat etmen gereken şeyler..."
+              rows={3}
+              style={{
+                width: "100%",
+                padding: "10px 14px",
+                background: "var(--bg-primary)",
+                border: "1px solid var(--border)",
+                borderRadius: "var(--radius-sm)",
+                color: "var(--text-main)",
+                fontSize: "1rem",
+                resize: "vertical",
+              }}
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={submitting || !imageFile || !courseName.trim()}
+            style={{ padding: "12px 32px", fontSize: "1rem" }}
+          >
+            {submitting ? "Yükleniyor..." : "Yanlışı Kaydet"}
+          </button>
+        </form>
+      </div>
+
+      {/* Wrong Answers Grid */}
+      {loading ? (
+        <div style={{ textAlign: "center", color: "var(--text-muted)", padding: "40px" }}>
+          Yükleniyor...
+        </div>
+      ) : wrongAnswers.length === 0 ? (
+        <div
+          className="glass-panel"
+          style={{
+            padding: "40px",
+            textAlign: "center",
+            color: "var(--text-muted)",
+          }}
+        >
+          <p style={{ fontSize: "2rem", marginBottom: "8px" }}>📝</p>
+          <p>Henüz yanlış kaydedilmemiş. Yukarıdan ilk yanlışını ekle!</p>
+        </div>
+      ) : (
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(380px, 1fr))",
+            gap: "20px",
+          }}
+        >
+          {wrongAnswers.map((wa) => (
+            <div
+              key={wa.id}
+              className="glass-panel animate-fade-in"
+              style={{ padding: "0", overflow: "hidden" }}
+            >
+              {/* Image */}
+              <img
+                src={wa.imagePath}
+                alt={`${wa.courseName} yanlış`}
+                style={{
+                  width: "100%",
+                  maxHeight: "260px",
+                  objectFit: "cover",
+                  borderBottom: "1px solid var(--border)",
+                }}
+              />
+
+              {/* Card Content */}
+              <div style={{ padding: "16px" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "flex-start",
+                    marginBottom: "8px",
+                  }}
+                >
+                  <div>
+                    <span
+                      style={{
+                        display: "inline-block",
+                        padding: "4px 10px",
+                        background: "var(--primary)",
+                        color: "#fff",
+                        borderRadius: "var(--radius-sm)",
+                        fontSize: "0.85rem",
+                        fontWeight: 600,
+                      }}
+                    >
+                      {wa.courseName}
+                    </span>
+                    {wa.topicName && (
+                      <span
+                        style={{
+                          display: "inline-block",
+                          padding: "4px 10px",
+                          background: "var(--secondary)",
+                          color: "var(--text-main)",
+                          borderRadius: "var(--radius-sm)",
+                          fontSize: "0.85rem",
+                          fontWeight: 500,
+                          marginLeft: "8px",
+                        }}
+                      >
+                        {wa.topicName}
+                      </span>
+                    )}
+                  </div>
+                  <button
+                    onClick={() => handleDelete(wa.id)}
+                    className="btn btn-outline"
+                    style={{
+                      padding: "4px 10px",
+                      fontSize: "0.8rem",
+                      color: "var(--accent)",
+                      borderColor: "var(--accent)",
+                    }}
+                  >
+                    Sil
+                  </button>
+                </div>
+
+                {wa.note && (
+                  <p
+                    style={{
+                      color: "var(--text-muted)",
+                      fontSize: "0.95rem",
+                      marginTop: "8px",
+                      lineHeight: 1.5,
+                    }}
+                  >
+                    {wa.note}
+                  </p>
+                )}
+
+                <p
+                  style={{
+                    color: "var(--text-muted)",
+                    fontSize: "0.8rem",
+                    marginTop: "12px",
+                    opacity: 0.7,
+                  }}
+                >
+                  {formatDate(wa.createdAt)}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}

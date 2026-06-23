@@ -1,0 +1,19 @@
+{
+  "name": "StudyHane",
+  "short_name": "StudyHane",
+  "description": "Arkadaşlarınla rekabet et, ders çalış, netlerini takip et.",
+  "theme_color": "#1e293b",
+  "background_color": "#0f172a",
+  "display": "standalone",
+  "orientation": "portrait",
+  "scope": "/",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
