@@ -204,7 +204,6 @@ export default function WrongBookPage() {
               id="wrong-image-input"
               type="file"
               accept="image/*"
-              capture="environment"
               onChange={handleImageChange}
               style={{
                 width: "100%",
