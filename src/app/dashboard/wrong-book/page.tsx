@@ -200,47 +200,19 @@ export default function WrongBookPage() {
             >
               Soru Görseli *
             </label>
-            <div style={{ display: "flex", gap: "12px" }}>
+            <div>
               <label
-                htmlFor="wrong-image-camera"
+                htmlFor="wrong-image-gallery"
                 style={{
-                  flex: 1,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  padding: "16px 8px",
+                  width: "100%",
+                  padding: "16px",
                   background: "var(--bg-primary)",
                   border: "2px dashed var(--primary)",
                   borderRadius: "var(--radius-sm)",
                   color: "var(--primary)",
-                  fontWeight: 600,
-                  cursor: "pointer",
-                  textAlign: "center",
-                  transition: "all 0.2s"
-                }}
-              >
-                📸 Foto Çek
-              </label>
-              <input
-                id="wrong-image-camera"
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                style={{ position: "absolute", width: "1px", height: "1px", opacity: 0, overflow: "hidden", zIndex: -1 }}
-              />
-
-              <label
-                htmlFor="wrong-image-gallery"
-                style={{
-                  flex: 1,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  padding: "16px 8px",
-                  background: "var(--bg-primary)",
-                  border: "2px dashed var(--secondary)",
-                  borderRadius: "var(--radius-sm)",
-                  color: "var(--secondary)",
                   fontWeight: 600,
                   cursor: "pointer",
                   textAlign: "center",
