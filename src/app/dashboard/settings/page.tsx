@@ -110,6 +110,7 @@ export default function SettingsPage() {
           }}
         >
           <div
+            className="settings-row"
             style={{
               display: "flex",
               justifyContent: "space-between",
@@ -128,6 +129,7 @@ export default function SettingsPage() {
           </div>
 
           <div
+            className="settings-row"
             style={{
               display: "flex",
               justifyContent: "space-between",
@@ -135,6 +137,7 @@ export default function SettingsPage() {
               padding: "12px 16px",
               background: "var(--bg-primary)",
               borderRadius: "var(--radius-sm)",
+              wordBreak: "break-all",
             }}
           >
             <span style={{ color: "var(--text-muted)", fontSize: "0.9rem" }}>

@@ -15,21 +15,21 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section style={{ padding: '80px 0', textAlign: 'center', minHeight: '80vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+      <section style={{ padding: '40px 0', textAlign: 'center', minHeight: '80vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
         <div className="container animate-fade-in">
-          <h1 style={{ fontSize: '4rem', marginBottom: '24px' }}>
-            Rakiplerin Çalışıyor, <br />
+          <h1 style={{ fontSize: 'clamp(1.75rem, 5vw, 4rem)', marginBottom: '24px', lineHeight: 1.15 }}>
+            Rakiplerin Çalışıyor, {' '}
             <span className="gradient-text">Sen Neredesin?</span>
           </h1>
-          <p style={{ fontSize: '1.2rem', color: 'var(--text-muted)', maxWidth: '600px', margin: '0 auto 40px', lineHeight: 1.8 }}>
+          <p style={{ fontSize: 'clamp(0.9rem, 2.5vw, 1.2rem)', color: 'var(--text-muted)', maxWidth: '600px', margin: '0 auto 32px', lineHeight: 1.8 }}>
             YKS, KPSS, LGS veya hangi sınava hazırlanıyorsan — çalışma grubunu kur, çözdüğün soruları gir ve arkadaşlarınla rekabet et!
           </p>
           
-          <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link href="/register" className="btn btn-primary" style={{ fontSize: '1.1rem', padding: '16px 32px' }}>
+          <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <Link href="/register" className="btn btn-primary" style={{ fontSize: '1rem', padding: '14px 28px' }}>
               Ücretsiz Başla
             </Link>
-            <Link href="/login" className="btn btn-outline" style={{ fontSize: '1.1rem', padding: '16px 32px' }}>
+            <Link href="/login" className="btn btn-outline" style={{ fontSize: '1rem', padding: '14px 28px' }}>
               Giriş Yap
             </Link>
           </div>

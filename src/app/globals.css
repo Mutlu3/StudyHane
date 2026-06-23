@@ -170,6 +170,12 @@ a:hover {
 .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
 .grid-2-1 { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
 
+/* Global input styling */
+input, select, textarea {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px; /* Prevents iOS zoom on focus */
+}
+
 @media (max-width: 992px) {
   .grid-3 { grid-template-columns: repeat(2, 1fr); }
   .grid-2-1 { grid-template-columns: 1fr; }
@@ -180,8 +186,10 @@ a:hover {
   
   .container { padding: 0 16px; }
   
-  h1 { font-size: 2.5rem !important; }
-  h2 { font-size: 1.5rem !important; }
+  h1 { font-size: 1.75rem !important; }
+  h2 { font-size: 1.25rem !important; }
+  h3 { font-size: 1.1rem !important; }
+  h4 { font-size: 1rem !important; }
   
   /* Mobile padding adjustments */
   .mobile-p-4 { padding: 16px !important; }
@@ -189,6 +197,44 @@ a:hover {
   
   /* Hide on mobile utility */
   .hidden-mobile { display: none !important; }
+  
+  /* Button sizing for touch */
+  .btn {
+    padding: 12px 20px;
+    font-size: 0.9rem;
+    min-height: 44px;
+  }
+  
+  /* Glass panel mobile padding */
+  .glass-panel {
+    padding: 16px !important;
+    border-radius: var(--radius-sm);
+  }
+  
+  /* Pomodoro circle fix */
+  .pomodoro-circle {
+    padding: 40px 32px !important;
+    border-radius: 50% !important;
+  }
+  .pomodoro-circle .pomodoro-time {
+    font-size: 3.5rem !important;
+  }
+  
+  /* Form elements full width on mobile */
+  form {
+    flex-direction: column !important;
+  }
+  form input, form select, form textarea {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+  
+  /* Settings account info stacking */
+  .settings-row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 4px !important;
+  }
   
   /* Mobile Sidebar Overlays */
   .mobile-overlay {
@@ -199,3 +245,4 @@ a:hover {
     backdrop-filter: blur(4px);
   }
 }
+

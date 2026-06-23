@@ -66,9 +66,9 @@ export default function PomodoroPage() {
   };
 
   return (
-    <div className="animate-fade-in" style={{ textAlign: 'center', paddingTop: '40px' }}>
-      <h1 style={{ fontSize: '2.5rem', marginBottom: '8px' }}>Pomodoro Sayacı</h1>
-      <p style={{ color: 'var(--text-muted)', marginBottom: '32px' }}>
+    <div className="animate-fade-in" style={{ textAlign: 'center', paddingTop: '16px' }}>
+      <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 2.5rem)', marginBottom: '8px' }}>Pomodoro Sayacı</h1>
+      <p style={{ color: 'var(--text-muted)', marginBottom: '24px', fontSize: '0.95rem' }}>
         {isBreak ? "Mola Zamanı! Biraz dinlen." : "Odaklanma Zamanı! Telefonu uzaklaştır."}
       </p>
 
@@ -98,17 +98,17 @@ export default function PomodoroPage() {
         </div>
       )}
 
-      <div className="glass-panel" style={{ display: 'inline-block', padding: '60px 80px', borderRadius: '50%', border: `4px solid ${isBreak ? 'var(--secondary)' : 'var(--primary)'}` }}>
-        <div style={{ fontSize: '6rem', fontWeight: 800, fontFamily: 'monospace', color: isBreak ? 'var(--secondary)' : 'var(--primary)' }}>
+      <div className="glass-panel pomodoro-circle" style={{ display: 'inline-block', padding: '60px 80px', borderRadius: '50%', border: `4px solid ${isBreak ? 'var(--secondary)' : 'var(--primary)'}` }}>
+        <div className="pomodoro-time" style={{ fontSize: '6rem', fontWeight: 800, fontFamily: 'monospace', color: isBreak ? 'var(--secondary)' : 'var(--primary)' }}>
           {formatTime(timeLeft)}
         </div>
       </div>
 
-      <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', marginTop: '40px' }}>
-        <button onClick={toggleTimer} className={`btn ${isActive ? 'btn-outline' : 'btn-primary'}`} style={{ width: '150px' }}>
+      <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', marginTop: '24px', flexWrap: 'wrap' }}>
+        <button onClick={toggleTimer} className={`btn ${isActive ? 'btn-outline' : 'btn-primary'}`} style={{ minWidth: '140px' }}>
           {isActive ? 'Duraklat' : (timeLeft < (isBreak ? 5 : workMinutes) * 60 ? 'Devam Et' : 'Başlat')}
         </button>
-        <button onClick={resetTimer} className="btn btn-outline" style={{ width: '150px' }}>
+        <button onClick={resetTimer} className="btn btn-outline" style={{ minWidth: '140px' }}>
           Sıfırla
         </button>
       </div>
