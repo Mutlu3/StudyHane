@@ -225,7 +225,6 @@ export default function WrongBookPage() {
                 id="wrong-image-camera"
                 type="file"
                 accept="image/*"
-                capture="camera"
                 onChange={handleImageChange}
                 style={{ position: "absolute", width: "1px", height: "1px", opacity: 0, overflow: "hidden", zIndex: -1 }}
               />
