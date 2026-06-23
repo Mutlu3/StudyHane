@@ -200,20 +200,38 @@ export default function WrongBookPage() {
             >
               Soru Görseli *
             </label>
+            <label
+              htmlFor="wrong-image-input"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+                padding: "16px",
+                background: "var(--bg-primary)",
+                border: "2px dashed var(--primary)",
+                borderRadius: "var(--radius-sm)",
+                color: "var(--primary)",
+                fontWeight: 600,
+                cursor: "pointer",
+                textAlign: "center",
+                transition: "all 0.2s"
+              }}
+            >
+              📸 Dosya Seç veya Fotoğraf Çek
+            </label>
             <input
               id="wrong-image-input"
               type="file"
               accept="image/*"
               onChange={handleImageChange}
-              style={{
-                width: "100%",
-                padding: "10px",
-                background: "var(--bg-primary)",
-                border: "1px solid var(--border)",
-                borderRadius: "var(--radius-sm)",
-                color: "var(--text-main)",
-              }}
+              style={{ display: "none" }}
             />
+            {imageFile && (
+              <div style={{ marginTop: "8px", fontSize: "0.85rem", color: "var(--text-muted)", textAlign: "center" }}>
+                Seçilen dosya: {imageFile.name}
+              </div>
+            )}
             {imagePreview && (
               <div style={{ marginTop: "12px" }}>
                 <img
