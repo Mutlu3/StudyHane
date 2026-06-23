@@ -11,7 +11,6 @@ const withPWA = withPWAInit({
 const nextConfig: NextConfig = {
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
-  swcMinify: false, // bazen next-pwa worker error'a sebep olabiliyor
 };
 
 export default withPWA(nextConfig);
