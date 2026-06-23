@@ -92,40 +92,40 @@ export default function GroupPage() {
 
   return (
     <div className="animate-fade-in">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '40px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '16px' }}>
         <div>
-          <h1 style={{ fontSize: '2.5rem', marginBottom: '8px' }}>{data.group.name}</h1>
-          <p style={{ color: 'var(--text-muted)' }}>Bu haftanın liderlik tablosu (Skor = Soru x2 + Süre)</p>
+          <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 2.5rem)', marginBottom: '4px' }}>{data.group.name}</h1>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Liderlik Tablosu (Soru x2 + Süre)</p>
         </div>
-        <div className="glass-panel" style={{ padding: '16px 24px', display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <span style={{ color: 'var(--text-muted)' }}>Davet Kodu:</span>
-          <span style={{ fontSize: '1.2rem', fontWeight: 800, letterSpacing: '2px', color: 'var(--primary)' }}>{data.group.inviteCode}</span>
+        <div className="glass-panel" style={{ padding: '8px 16px', display: 'flex', alignItems: 'center', gap: '8px', whiteSpace: 'nowrap' }}>
+          <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Davet Kodu:</span>
+          <span style={{ fontSize: '1rem', fontWeight: 800, letterSpacing: '2px', color: 'var(--primary)' }}>{data.group.inviteCode}</span>
         </div>
       </div>
 
-      <div className="glass-panel" style={{ overflow: 'hidden' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+      <div className="glass-panel" style={{ padding: 0, overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+        <table style={{ width: '100%', minWidth: '600px', borderCollapse: 'collapse', textAlign: 'left' }}>
           <thead>
             <tr style={{ background: 'var(--bg-primary)', borderBottom: '1px solid var(--border)' }}>
-              <th style={{ padding: '16px 24px', fontWeight: 600, color: 'var(--text-muted)' }}>Sıra</th>
-              <th style={{ padding: '16px 24px', fontWeight: 600, color: 'var(--text-muted)' }}>Öğrenci</th>
-              <th style={{ padding: '16px 24px', fontWeight: 600, color: 'var(--text-muted)' }}>Bu Hafta Çözülen</th>
-              <th style={{ padding: '16px 24px', fontWeight: 600, color: 'var(--text-muted)' }}>Süre (Dk)</th>
-              <th style={{ padding: '16px 24px', fontWeight: 600, color: 'var(--text-muted)' }}>Ateş Serisi</th>
-              <th style={{ padding: '16px 24px', fontWeight: 600, color: 'var(--primary)' }}>Skor</th>
+              <th style={{ padding: '12px 16px', fontWeight: 600, color: 'var(--text-muted)', fontSize: '0.9rem' }}>Sıra</th>
+              <th style={{ padding: '12px 16px', fontWeight: 600, color: 'var(--text-muted)', fontSize: '0.9rem' }}>Öğrenci</th>
+              <th style={{ padding: '12px 16px', fontWeight: 600, color: 'var(--text-muted)', fontSize: '0.9rem' }}>Soru</th>
+              <th style={{ padding: '12px 16px', fontWeight: 600, color: 'var(--text-muted)', fontSize: '0.9rem' }}>Süre</th>
+              <th style={{ padding: '12px 16px', fontWeight: 600, color: 'var(--text-muted)', fontSize: '0.9rem' }}>Seri</th>
+              <th style={{ padding: '12px 16px', fontWeight: 600, color: 'var(--primary)', fontSize: '0.9rem' }}>Skor</th>
             </tr>
           </thead>
           <tbody>
             {data.leaderboard.map((user: any, index: number) => (
               <tr key={user.id} style={{ borderBottom: '1px solid var(--border)', background: index === 0 ? 'rgba(255, 215, 0, 0.05)' : 'transparent' }}>
-                <td style={{ padding: '16px 24px', fontWeight: 700 }}>
+                <td style={{ padding: '12px 16px', fontWeight: 700 }}>
                   {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `${index + 1}.`}
                 </td>
-                <td style={{ padding: '16px 24px', fontWeight: 600 }}>{user.name}</td>
-                <td style={{ padding: '16px 24px' }}>{user.todayQuestions} Soru</td>
-                <td style={{ padding: '16px 24px' }}>{user.todayMinutes} Dk</td>
-                <td style={{ padding: '16px 24px', color: 'var(--accent)', fontWeight: 600 }}>{user.streak > 0 ? `🔥 ${user.streak}` : '-'}</td>
-                <td style={{ padding: '16px 24px', fontWeight: 800, color: 'var(--primary)' }}>{user.score}</td>
+                <td style={{ padding: '12px 16px', fontWeight: 600 }}>{user.name}</td>
+                <td style={{ padding: '12px 16px' }}>{user.todayQuestions}</td>
+                <td style={{ padding: '12px 16px' }}>{user.todayMinutes} Dk</td>
+                <td style={{ padding: '12px 16px', color: 'var(--accent)', fontWeight: 600 }}>{user.streak > 0 ? `🔥 ${user.streak}` : '-'}</td>
+                <td style={{ padding: '12px 16px', fontWeight: 800, color: 'var(--primary)' }}>{user.score}</td>
               </tr>
             ))}
           </tbody>
